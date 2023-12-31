@@ -1,0 +1,198 @@
+<%- include('common/header'); -%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Complaint</title>
+    <style>
+        body {
+            background-color: #dfe5ec;
+        }
+
+        .card {
+            background-color: #edeff0;
+            border: 1px solid #000000;
+            border-radius: 20px;
+        }
+        .button {
+            font-family: monospace;
+            background-color: #bfbfbf;
+            color: #434343;
+            border: none;
+            border-radius: 8px;
+            width: 100px;
+            height: 45px;
+            transition: .3s;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 20px;
+            
+            
+          }
+          
+          button:hover {
+            background-color: #67274A;
+            box-shadow: 0 0 0 5px #883b65;
+            color: #fff;
+          }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-3 mb-3"><%= title %></h1>
+
+        <div class="card mb-5">
+            <div class="card-header">Create a complaint</div>
+            <div class="card-body">
+                <form id="complaintForm" method="post" action="/complaint/add_complaint">
+                
+                    <div class="mb-3">
+                        <label for="dept" class="form-label">Dept</label>
+                            <select name="dept" id="dept" class="form-control">
+                                <option value="0">Select Department</option>
+                                <% for(var count = 0; count < dept_data.length; count++) { %>
+                                    <option value="<%= dept_data[count].dept_id %>"><%= dept_data[count].dept_name %></option>
+                                <% } %>
+                            </select>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Complaint" class="form-label">Complaint</label>
+                            <select name="Complaint" id="Complaint" class="form-control">
+                                <option value="">Select Complaint</option>
+                            </select>
+                        </div>
+                    <div class="mb-3">
+                        <label for="explain" class="form-label">Explain Problem</label>
+                        <input type="text" name="explain" id="explain" class="form-control" placeholder="Explain Problem"/>
+                    </div>
+                    <input type="submit" class="btn btn-outline-success btn-sm" value="Add Complaint" id="button">
+                    <input type="reset" class="btn btn-outline-success btn-sm" value="Clear">
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col"><h3>Your Complaints</h3></div>
+                    <div class="col"></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="mytable">
+                        <tr>
+                            <th>Dept</th>
+                            <th>Complaint</th>
+                            <th>Issue</th>
+                            <th>Date</th>
+                            <th>Review</th>
+                            <th>Status</th>
+                            <th>action</th>
+                            
+                        </tr>
+                        <% if(sampleData.length > 0) { %>
+                            <% sampleData.forEach(function(data){ %>
+                                <tr>
+                                    <td><%= data.dept_name %></td>
+                                    <td><%= data.complaint%></td>
+                                    <td><%= data.issue_detail %></td>
+                                    <td><%= data.formatted_created_dt %></td>
+                                    <td><%= data.review %></td>
+                                    <td><%= data.status %></td>
+                                    
+                                    <td>
+                                        <button onclick="fun('<%= data.issue_detail %>','<%= data.dept_id %>','<%= data.item %>', '/complaint/edit/<%= data.complaint_id %>')"class="btn btn-outline-info ">Edit</button>
+                                        <a href="/complaint/delete/<%= data.complaint_id %>" class="btn btn-outline-warning ">Delete</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5">No Data Found</td>
+                            </tr>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function fetch_data(parent_element, child_element, type, callback) {
+            fetch('/complaint/get_data1?type=' + type + '&parent_value=' + parent_element.value)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (responseData) {
+                    var html = '';
+
+                    if (type === 'load_complaint') {
+                        html = '<option value="0">Select Complaint</option>';
+                    }
+
+                    for (var count = 0; count < responseData.length; count++) {
+                        html += '<option value="' + responseData[count].id + '">' + responseData[count].complaint + '</option>';
+                    }
+
+                    child_element.innerHTML = html;
+
+                    if (callback && typeof callback === 'function') {
+                        callback();
+                    }
+                });
+        }
+
+        function setComplaintValue(itemId) {
+            var complaintSelect = document.getElementById('Complaint');
+
+            for (var i = 0; i < complaintSelect.options.length; i++) {
+                complaintSelect.options[i].selected = false;
+            }
+
+            var selectedOption = complaintSelect.querySelector('option[value="' + itemId + '"]');
+            if (selectedOption) {
+                selectedOption.selected = true;
+            }
+        }
+
+        function fun(issueDetailValue, deptId, itemId, complaintId) {
+            var form = document.getElementById('complaintForm');
+
+            document.getElementById("dept").value = deptId;
+
+            fetch_data(document.getElementById("dept"), document.getElementById("Complaint"), 'load_complaint', function () {
+                setComplaintValue(itemId);
+
+                document.getElementById('explain').value = issueDetailValue;
+
+                form.action = complaintId;
+
+                var submitButton = document.getElementById('button');
+                if (submitButton) {
+                    submitButton.value = 'Update The Complaint';
+                } else {
+                    console.error("Element with ID 'add' not found");
+                }
+            });
+        }
+
+        document.getElementById('dept').addEventListener('change', function () {
+            fetch_data(document.getElementById('dept'), document.getElementById('Complaint'), 'load_complaint', function () {
+                if (document.getElementById('Complaint').options.length > 1) {
+                    document.getElementById('Complaint').options[0].selected = true; 
+                }
+            });
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</div>
+</body>
+</html>

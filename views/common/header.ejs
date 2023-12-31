@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    .button {
+      font-family: monospace;
+      background-color: #1D1930;
+      color: #E9BCB9;
+      border: none;
+      border-radius: 8px;
+      width: 100px;
+      height: 45px;
+      transition: .3s;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: 20px;
+      
+      
+    }
+    
+    .button:hover {
+      background-color: #67274A;
+      box-shadow: 0 0 0 5px #883b65;
+      color: #E9BCB9;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+    }
+
+    .buttons a {
+      display: inline-block;
+      margin: 0 50px; 
+    }
+    .navigation{
+      background-color: #ccd2d8;
+    }
+  </style>
+</head>
+<body>
+  <div class="navigation" >
+    <div class="buttons">
+      <a href="/home">
+        <button class="button">
+          Home
+        </button>
+      </a>
+      <a href="/complaint">
+        <button class="button">
+          Complaint
+        </button>
+      </a>
+      <a href="/history">
+        <button class="button">
+          History
+        </button>
+      </a>
+      <% if (role_data  === '2') { %>
+      <a href="/solver">
+        <button class="button">
+          Solver
+        </button>
+      </a>
+      <% }; %>
+      <a href="/logout">
+        <button class="btn btn-danger">
+          Log Out
+        </button>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

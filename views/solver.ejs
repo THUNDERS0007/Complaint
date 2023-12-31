@@ -1,0 +1,102 @@
+<%- include('common/header'); -%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Your Page Title</title>
+    <style>
+        body {
+            background-color: #dfe5ec;
+        }
+
+        .card {
+            background-color: #edeff0;
+            border: 1px solid #000000;
+            border-radius: 20px;
+        }
+        .button {
+            font-family: monospace;
+            background-color: #bfbfbf;
+            color: #434343;
+            border: none;
+            border-radius: 8px;
+            width: 100px;
+            height: 45px;
+            transition: .3s;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 20px;
+            
+            
+          }
+          
+          button:hover {
+            background-color: #67274A;
+            box-shadow: 0 0 0 5px #883b65;
+            color: #fff;
+          }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-3 mb-3"><%= title %></h1>
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col"><h3>Complaints To Solve</h3></div>
+                    <div class="col"></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="mytable">
+                        <tr>
+                            <th>Name</th>
+                            <th>Dept</th>
+                            <th>Complaint</th>
+                            <th>Issue</th>
+                            <th>Date</th>
+                            <th>Review</th>
+                            <th>action</th>
+                        </tr>
+                        <% if(sampleData.length > 0) { %>
+                            <% sampleData.forEach(function(data){ %>
+                                <tr>
+                                    <td><%= data.name %></td>
+                                    <td><%= data.dept_name %></td>
+                                    <td><%= data.complaint%></td>
+                                    <td><%= data.issue_detail %></td>
+                                    <td><%= data.formatted_created_dt %></td>
+                                    <td>
+                                        <form  method="post" action="/solver/review/<%= data.complaint_id %>">
+                                        <input type="text" name="view" id="view" class="mb-3" placeholder="How to solve?">
+                                        <input type="submit" class="btn btn-outline-success btn-sm" value="Add Review">
+                                        </form>
+                                    </td>
+                                    <td><a href="/solver/edit/<%= data.complaint_id %>" class="btn btn-outline-info btn-sm">Done</a>
+                                    </td>
+                                    
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4">No Data Found</td>
+                            </tr>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</div>
+</body>
+</html>
